@@ -27,6 +27,7 @@ jobs:
           if [ ! -d android ]; then
             flutter create --platforms=android --org com.thewordcompanion --project-name the_word_companion .
             sed -i 's/android:label="the_word_companion"/android:label="The Word Companion"/' android/app/src/main/AndroidManifest.xml
+            sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 36/' android/app/build.gradle.kts
           fi
       - name: Install dependencies
         run: flutter pub get

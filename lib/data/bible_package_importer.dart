@@ -74,6 +74,9 @@ class BiblePackageImporter {
     final name = requiredText(manifest, 'display_name');
     final abbreviation = requiredText(manifest, 'abbreviation');
     final language = requiredText(manifest, 'language_code');
+    if (!language.toLowerCase().startsWith('en')) {
+      throw const FormatException('Only English Bible translation packages are supported.');
+    }
     final sourceName = requiredText(manifest, 'source_name');
     final sourceUrl = requiredText(manifest, 'source_url');
     final licenceName = requiredText(manifest, 'licence_name');
