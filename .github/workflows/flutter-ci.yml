@@ -36,9 +36,9 @@ jobs:
           find "$PUB_CACHE/hosted/pub.dev" -type f \\( -path '*/file_picker-*/android/build.gradle*' -o -path '*/flutter_plugin_android_lifecycle-*/android/build.gradle*' \\) -print0 |
           while IFS= read -r -d '' file; do
             sed -i -E \
-              -e 's/^([[:space:]]*compileSdkVersion[[:space:]]+).*/\136/' \
-              -e 's/^([[:space:]]*compileSdk[[:space:]]*=[[:space:]]*).*/\136/' \
-              -e 's/^([[:space:]]*compileSdkVersion[[:space:]]*=[[:space:]]*).*/\136/' \
+              -e 's/^([[:space:]]*compileSdkVersion[[:space:]]+).*/\1 36/' \
+              -e 's/^([[:space:]]*compileSdk[[:space:]]*=[[:space:]]*).*/\1 36/' \
+              -e 's/^([[:space:]]*compileSdkVersion[[:space:]]*=[[:space:]]*).*/\1 36/' \
               "$file"
             echo "Patched $file"
             grep -n 'compileSdk' "$file" || true
