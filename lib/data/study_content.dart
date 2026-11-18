@@ -92,5 +92,61 @@ const Map<String, StudyGuide> studyGuides = {
       'What concern can you honestly bring to God today?',
       'What is one thing you can thank God for even while that concern remains?',
     ],
+  ),,
+
+  'Matthew 6:33': StudyGuide(
+    understand: 'Jesus calls his followers to make God’s kingdom and righteousness their first priority. The promise about daily needs belongs to a teaching that invites trust in the Father rather than anxious obsession with possessions.',
+    context: 'Matthew 6:25–34 addresses worry about food, drink and clothing. Jesus points to the Father’s care and contrasts a life ruled by anxiety with a life that seeks God’s reign.',
+    apply: 'Let God’s values guide your choices about time, money and relationships. Make responsible plans for daily needs, but do not let the pursuit of them displace faith, justice and care for others.',
+    connections: [
+      StudyConnection('Matthew 6:25–32', 'The surrounding teaching explains the call to seek God’s kingdom in the context of daily needs.'),
+      StudyConnection('Luke 12:31', 'Luke records a parallel invitation to seek the kingdom.'),
+      StudyConnection('Colossians 3:1–2', 'It similarly directs attention toward the things above and a life shaped by Christ.'),
+    ],
+    reflection: ['What currently competes most strongly for first place in your attention?', 'What practical choice could show that God’s values come first this week?'],
+  ),
+  'Micah 6:8': StudyGuide(
+    understand: 'Micah summarises faithful living as practising justice, loving mercy and walking humbly with God. Faith is expressed not only in religious activity but also in how people treat others.',
+    context: 'Micah 6 presents a courtroom-like picture in which God reminds Israel of his faithfulness and challenges empty religious performance. Verse 8 answers what the Lord requires.',
+    apply: 'Act fairly, show compassion consistently and remain teachable before God. Look for a concrete way to treat someone with dignity, especially where you have influence or responsibility.',
+    connections: [
+      StudyConnection('Amos 5:24', 'The prophet also insists that justice must become part of public life.'),
+      StudyConnection('Matthew 23:23', 'Jesus highlights justice, mercy and faithfulness as weightier matters of the law.'),
+      StudyConnection('James 1:27', 'It describes practical care for vulnerable people as part of sincere religion.'),
+    ],
+    reflection: ['Which of justice, mercy or humility needs more attention in your daily choices?', 'How can your faith become visible through one fair and compassionate action?'],
+  ),
+  'James 1:5': StudyGuide(
+    understand: 'James encourages anyone who lacks wisdom to ask God, who gives generously. Wisdom is more than information; it is the ability to respond faithfully to life and its challenges.',
+    context: 'James 1 speaks about trials, perseverance and becoming mature in faith. The invitation to ask for wisdom follows the call to face testing with endurance.',
+    apply: 'Pray for wisdom before reacting, consider Scripture carefully and seek advice from mature, trustworthy people. Then be willing to act on what is wise and good.',
+    connections: [
+      StudyConnection('Proverbs 2:6', 'It identifies the Lord as the source of wisdom and understanding.'),
+      StudyConnection('1 Kings 3:9–12', 'Solomon asks God for an understanding heart to lead well.'),
+      StudyConnection('James 3:17', 'It describes the character and fruit of wisdom from above.'),
+    ],
+    reflection: ['Where do you need wisdom rather than simply a quick answer?', 'What would a wise and peaceable response look like in that situation?'],
+  ),
+  'Ephesians 2:8': StudyGuide(
+    understand: 'Paul teaches that salvation is a gift of grace received through faith, not an achievement people can boast about. The verse directs attention away from self-earned status and toward God’s generosity.',
+    context: 'Ephesians 2:1–10 describes the movement from spiritual death to life with Christ. Verses 8–9 explain salvation as God’s gift, and verse 10 describes a life of good works prepared by God.',
+    apply: 'Approach God with gratitude rather than pride or despair. Let grace encourage humility, and let the following verse motivate you to do good without treating good works as a way to purchase salvation.',
+    connections: [
+      StudyConnection('Romans 3:23–24', 'It connects universal need with being justified freely by grace.'),
+      StudyConnection('Titus 3:5–7', 'It describes salvation as grounded in God’s mercy rather than human deeds.'),
+      StudyConnection('Ephesians 2:10', 'The next verse explains that grace leads into a life of good works.'),
+    ],
+    reflection: ['How does understanding salvation as a gift challenge pride or discouragement?', 'What good work can you do out of gratitude rather than to earn approval?'],
+  ),
+  'Galatians 5:22': StudyGuide(
+    understand: 'Paul describes the fruit produced by the Holy Spirit in a person’s life. Love, joy, peace, patience, kindness, goodness, faithfulness, gentleness and self-control are qualities that grow as believers live by the Spirit.',
+    context: 'Galatians 5 contrasts life directed by selfish desires with life guided by the Spirit. The fruit is a unified picture of character, not a checklist for judging other people.',
+    apply: 'Choose one quality to practise in a real relationship today. Ask God for help, make room for correction and remember that spiritual growth is a continuing process.',
+    connections: [
+      StudyConnection('John 15:4–5', 'Jesus teaches that lasting fruit comes from remaining connected to him.'),
+      StudyConnection('Colossians 3:12–14', 'It lists virtues believers are to put on, with love binding them together.'),
+      StudyConnection('2 Peter 1:5–8', 'It encourages growth in qualities that make faith fruitful.'),
+    ],
+    reflection: ['Which quality in this list would make the greatest difference in one of your relationships?', 'What small, specific action could help you practise that quality today?'],
   ),
 };
