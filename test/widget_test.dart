@@ -21,7 +21,7 @@ void main(){
   expect(find.textContaining('No Bible translation is installed yet.'),findsOneWidget);
  });
  testWidgets('main navigation switches between app sections',(tester)async{
-  await tester.pumpWidget(const MaterialApp(home:AppShell()));await tester.pumpAndSettle();expect(find.text('Welcome'),findsOneWidget);
+  await tester.pumpWidget(MaterialApp(home:AppShell(bibleRepository:_EmptyBibleRepository())));await tester.pumpAndSettle();expect(find.text('Welcome'),findsOneWidget);
   await tester.tap(find.text('Bible'));await tester.pumpAndSettle();expect(find.text('Bible reader'),findsOneWidget);
   await tester.tap(find.text('Study'));await tester.pumpAndSettle();expect(find.text('Study Scripture'),findsOneWidget);
   await tester.tap(find.text('Hymns'));await tester.pumpAndSettle();expect(find.text('Hymn Library'),findsOneWidget);

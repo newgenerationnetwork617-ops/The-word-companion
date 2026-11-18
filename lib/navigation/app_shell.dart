@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../data/bible_repository.dart';
 import '../features/bible/bible_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/hymns/hymns_screen.dart';
@@ -7,7 +8,9 @@ import '../features/settings/settings_screen.dart';
 import '../features/study/study_screen.dart';
 
 class AppShell extends StatefulWidget {
-  const AppShell({super.key});
+  const AppShell({super.key, this.bibleRepository});
+
+  final BibleRepository? bibleRepository;
 
   @override
   State<AppShell> createState() => _AppShellState();
@@ -16,17 +19,18 @@ class AppShell extends StatefulWidget {
 class _AppShellState extends State<AppShell> {
   int _index = 0;
 
-  static const _screens = [
-    HomeScreen(),
-    BibleScreen(),
-    StudyScreen(),
-    HymnsScreen(),
-    SettingsScreen(),
-  ];
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: IndexedStack(index: _index, children: _screens),
+  Widget build(BuildContext context) {
+    final screens = [
+      const HomeScreen(),
+      BibleScreen(repository: widget.bibleRepository),
+      const StudyScreen(),
+      const HymnsScreen(),
+      const SettingsScreen(),
+    ];
+    return Scaffold(
+        body: IndexedStack(index: _index, children: screens),
         bottomNavigationBar: NavigationBar(
           selectedIndex: _index,
           onDestinationSelected: (value) => setState(() => _index = value),
@@ -39,6 +43,7 @@ class _AppShellState extends State<AppShell> {
           ],
         ),
       );
+  }
 }
 
 class SectionScaffold extends StatelessWidget {
