@@ -3,10 +3,17 @@ import 'package:flutter/material.dart';
 import '../../data/bible_catalog.dart';
 import '../../data/bible_repository.dart';
 
+class VerseStudySelection {
+  const VerseStudySelection({required this.reference, required this.text});
+  final String reference;
+  final String text;
+}
+
 class BibleScreen extends StatefulWidget {
   const BibleScreen({super.key, this.repository});
 
   final BibleRepository? repository;
+  final ValueChanged<VerseStudySelection>? onStudyVerse;
 
   @override
   State<BibleScreen> createState() => _BibleScreenState();
@@ -93,11 +100,10 @@ class _BibleScreenState extends State<BibleScreen> {
         verse: verse,
         onStudy: () {
           Navigator.pop(context);
-          ScaffoldMessenger.of(this.context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Study workspace for ${_book.name} ${_chapter}:${verse.number} is being prepared.',
-              ),
+          widget.onStudyVerse?.call(
+            VerseStudySelection(
+              reference: '${_book.name} $_chapter:${verse.number}',
+              text: verse.text,
             ),
           );
         },

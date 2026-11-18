@@ -18,14 +18,21 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   int _index = 0;
+  VerseStudySelection? _selectedVerse;
 
 
   @override
   Widget build(BuildContext context) {
     final screens = [
       const HomeScreen(),
-      BibleScreen(repository: widget.bibleRepository),
-      const StudyScreen(),
+      BibleScreen(
+        repository: widget.bibleRepository,
+        onStudyVerse: (selection) => setState(() {
+          _selectedVerse = selection;
+          _index = 2;
+        }),
+      ),
+      StudyScreen(selection: _selectedVerse),
       const HymnsScreen(),
       const SettingsScreen(),
     ];
