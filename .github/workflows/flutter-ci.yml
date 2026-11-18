@@ -29,6 +29,8 @@ jobs:
           fi
           sed -i 's/android:label="the_word_companion"/android:label="The Word Companion"/' android/app/src/main/AndroidManifest.xml
           sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 36/' android/app/build.gradle.kts
+      - name: Install dependencies
+        run: flutter pub get
       - name: Align Android plugin compile SDK
         run: |
           # Some Flutter plugins still declare SDK 34 in their own Android module.
@@ -43,8 +45,6 @@ jobs:
             echo "Patched $file"
             grep -n 'compileSdk' "$file" || true
           done
-      - name: Install dependencies
-        run: flutter pub get
       - name: Analyze Dart source
         run: flutter analyze --no-fatal-infos
       - name: Run widget tests
