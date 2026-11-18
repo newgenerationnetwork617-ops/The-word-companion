@@ -56,7 +56,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Bible'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Choose a translation'));
+    await tester.tap(find.byType(DropdownButtonFormField<String>));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Sample English (SEN)'));
     await tester.pumpAndSettle();
@@ -66,7 +66,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Study Scripture'), findsOneWidget);
     expect(find.text('Genesis 1:1'), findsOneWidget);
-    expect(find.text('Understand'), findsOneWidget);
+    expect(find.textContaining('A full study guide for this verse has not been added yet.'), findsOneWidget);
   });
   testWidgets('main navigation switches between app sections', (tester) async {
     await tester.pumpWidget(MaterialApp(home: AppShell(bibleRepository: _EmptyBibleRepository(), hymnRepository: _EmptyHymnRepository())));
