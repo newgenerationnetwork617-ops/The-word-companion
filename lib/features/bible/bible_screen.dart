@@ -10,7 +10,7 @@ class VerseStudySelection {
 }
 
 class BibleScreen extends StatefulWidget {
-  const BibleScreen({super.key, this.repository});
+  const BibleScreen({super.key, this.repository, this.onStudyVerse});
 
   final BibleRepository? repository;
   final ValueChanged<VerseStudySelection>? onStudyVerse;
