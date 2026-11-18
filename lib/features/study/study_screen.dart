@@ -11,6 +11,7 @@ class StudyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selected = selection;
+    final guide = selected == null ? null : studyGuides[selected.reference];
     return Scaffold(
       appBar: AppBar(title: const Text('The Word Companion')),
       body: SafeArea(
@@ -55,7 +56,7 @@ class StudyScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 18),
-              if (studyGuides[selected.reference] case final guide?) ...[
+              if (guide != null) ...[
                 _StudySection(
                   icon: Icons.lightbulb_outline,
                   title: 'Understand',
