@@ -33,6 +33,97 @@ class _BibleScreenState extends State<BibleScreen> {
     _versionsFuture = _repository.getInstalledVersions();
   }
 
+  Future<void> _compareTranslations() async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (context) => FutureBuilder<Map<BibleVersion, List<BibleVerse>>>(
+        future: _repository.getChapterAcrossVersions(
+          bookId: _book.id,
+          chapter: _chapter,
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const SafeArea(
+              child: Padding(
+                padding: EdgeInsets.all(24),
+                child: Text('Unable to compare the installed translations.'),
+              ),
+            );
+          }
+          if (!snapshot.hasData) {
+            return const SafeArea(
+              child: Padding(
+                padding: EdgeInsets.all(32),
+                child: Center(child: CircularProgressIndicator()),
+              ),
+            );
+          }
+          final translations = snapshot.data!;
+          return SafeArea(
+            child: SizedBox(
+              height: MediaQuery.sizeOf(context).height * .78,
+              child: translations.isEmpty
+                  ? const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(24),
+                        child: Text('No installed translation contains this chapter yet.'),
+                      ),
+                    )
+                  : ListView(
+                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+                      children: [
+                        Text(
+                          'Compare ${_book.name} ${_chapter}',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        const SizedBox(height: 6),
+                        const Text('The same chapter, shown side by side by translation section.'),
+                        const SizedBox(height: 16),
+                        for (final entry in translations.entries)
+                          Card(
+                            margin: const EdgeInsets.only(bottom: 14),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${entry.key.name} (${entry.key.abbreviation})',
+                                    style: Theme.of(context).textTheme.titleMedium,
+                                  ),
+                                  const Divider(height: 20),
+                                  for (final verse in entry.value)
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 10),
+                                      child: Text.rich(
+                                        TextSpan(children: [
+                                          TextSpan(
+                                            text: '${verse.number}  ',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Theme.of(context).colorScheme.secondary,
+                                            ),
+                                          ),
+                                          TextSpan(text: verse.text),
+                                        ]),
+                                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.5),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Future<void> _pickBook() async {
     final result = await showModalBottomSheet<BibleBook>(
       context: context,
@@ -199,6 +290,17 @@ class _BibleScreenState extends State<BibleScreen> {
                           )
                         else
                           const _NoTranslationNotice(),
+                        if (versions.length > 1) ...[
+                          const SizedBox(height: 8),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: OutlinedButton.icon(
+                              onPressed: _compareTranslations,
+                              icon: const Icon(Icons.compare_arrows),
+                              label: const Text('Compare translations'),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
