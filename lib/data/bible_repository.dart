@@ -1,4 +1,3 @@
-import 'package:sqflite/sqflite.dart';
 import 'local_database.dart';
 
 class BibleVersion {
