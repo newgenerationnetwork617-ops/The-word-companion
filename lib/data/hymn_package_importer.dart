@@ -54,7 +54,7 @@ class HymnPackageImporter {
     final rawHymns = content['hymns'];
     if (rawHymns is! List || rawHymns.isEmpty) throw const FormatException('The collection contains no hymns.');
     final seen = <String>{};
-    final hymns = <Map<String, Object>>[];
+    final hymns = <Map<String, Object?>>[];
     for (final item in rawHymns) {
       if (item is! Map<String, dynamic>) throw const FormatException('Each hymn must be a JSON object.');
       final title = item['title'];
