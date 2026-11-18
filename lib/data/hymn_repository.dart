@@ -52,7 +52,7 @@ class HymnRepository {
     final rows = await db.rawQuery('''
       SELECT c.id, c.name, c.source_name, c.licence_name, COUNT(h.id) AS hymn_count
       FROM hymn_collections c LEFT JOIN hymns h ON h.collection_id = c.id
-      WHERE c.language_code = 'en'
+      WHERE c.language_code LIKE 'en%'
       GROUP BY c.id, c.name, c.source_name, c.licence_name
       ORDER BY c.name COLLATE NOCASE
     ''');
@@ -66,7 +66,7 @@ class HymnRepository {
     final rows = await db.rawQuery('''
       SELECT h.id, h.title, h.hymn_number, h.first_line, c.name AS collection_name
       FROM hymns h INNER JOIN hymn_collections c ON c.id = h.collection_id
-      WHERE h.language_code = 'en' AND (h.title LIKE ? OR h.first_line LIKE ? OR h.lyrics LIKE ?)
+      WHERE h.language_code LIKE 'en%' AND (h.title LIKE ? OR h.first_line LIKE ? OR h.lyrics LIKE ?)
       ORDER BY h.title COLLATE NOCASE LIMIT 100
     ''', ['%$trimmed%', '%$trimmed%', '%$trimmed%']);
     return rows.map(HymnSummary.fromMap).toList(growable: false);
@@ -77,7 +77,7 @@ class HymnRepository {
     final rows = await db.rawQuery('''
       SELECT h.id, h.title, h.hymn_number, h.first_line, c.name AS collection_name
       FROM hymns h INNER JOIN hymn_collections c ON c.id = h.collection_id
-      WHERE h.collection_id = ? AND h.language_code = 'en'
+      WHERE h.collection_id = ? AND h.language_code LIKE 'en%'
       ORDER BY CAST(h.hymn_number AS INTEGER), h.title COLLATE NOCASE
     ''', [collectionId]);
     return rows.map(HymnSummary.fromMap).toList(growable: false);
@@ -89,7 +89,7 @@ class HymnRepository {
       SELECT h.id, h.title, h.lyrics, h.hymn_number, h.source_name, h.licence_name,
              c.name AS collection_name
       FROM hymns h INNER JOIN hymn_collections c ON c.id = h.collection_id
-      WHERE h.id = ? AND h.language_code = 'en' LIMIT 1
+      WHERE h.id = ? AND h.language_code LIKE 'en%' LIMIT 1
     ''', [id]);
     if (rows.isEmpty) return null;
     final row = rows.first;
