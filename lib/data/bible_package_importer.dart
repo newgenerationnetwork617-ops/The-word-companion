@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
-import 'package:sqflite/sqflite.dart';
 
 import 'bible_catalog.dart';
 import 'local_database.dart';
