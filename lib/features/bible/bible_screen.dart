@@ -3,11 +3,14 @@ import '../../data/bible_catalog.dart';
 import '../../data/bible_repository.dart';
 
 class BibleScreen extends StatefulWidget {
- const BibleScreen({super.key});
+ const BibleScreen({super.key, this.repository});
+ final BibleRepository? repository;
  @override State<BibleScreen> createState()=>_BibleScreenState();
 }
 class _BibleScreenState extends State<BibleScreen> {
- final _repository=BibleRepository();
+ late final BibleRepository _repository;
+ late Future<List<BibleVersion>> _versionsFuture;
+ @override void initState(){super.initState();_repository=widget.repository??BibleRepository();_versionsFuture=_repository.getInstalledVersions();}
  BibleBook _book=bibleBooks.first;
  int _chapter=1;
  String? _versionId;
@@ -25,7 +28,7 @@ class _BibleScreenState extends State<BibleScreen> {
  @override Widget build(BuildContext context)=>Scaffold(
   appBar:AppBar(title:const Text('The Word Companion')),
   body:SafeArea(child:FutureBuilder<List<BibleVersion>>(
-   future:_repository.getInstalledVersions(),
+   future:_versionsFuture,
    builder:(context,snapshot){
     if(snapshot.hasError)return const Center(child:Text('The Bible library could not be opened.'));
     if(!snapshot.hasData)return const Center(child:CircularProgressIndicator());

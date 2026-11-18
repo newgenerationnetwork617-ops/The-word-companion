@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:the_word_companion/data/bible_catalog.dart';
+import 'package:the_word_companion/data/bible_repository.dart';
 import 'package:the_word_companion/features/bible/bible_screen.dart';
 import 'package:the_word_companion/navigation/app_shell.dart';
 
+class _EmptyBibleRepository extends BibleRepository {
+ @override Future<List<BibleVersion>> getInstalledVersions() async => [];
+}
 void main(){
  test('Bible catalogue contains the 66 books in canonical order',(){
   expect(bibleBooks,hasLength(66));expect(bibleBooks.first.name,'Genesis');expect(bibleBooks.last.name,'Revelation');
@@ -11,8 +15,10 @@ void main(){
   expect(bibleBooks.firstWhere((b)=>b.name=='Psalms').chapters,150);
  });
  testWidgets('Bible reader clearly reports missing translation content',(tester)async{
-  await tester.pumpWidget(const MaterialApp(home:BibleScreen()));await tester.pumpAndSettle();
-  expect(find.text('Bible reader'),findsOneWidget);expect(find.textContaining('No Bible translation is installed yet.'),findsOneWidget);
+  await tester.pumpWidget(MaterialApp(home:BibleScreen(repository:_EmptyBibleRepository())));
+  await tester.pumpAndSettle();
+  expect(find.text('Bible reader'),findsOneWidget);
+  expect(find.textContaining('No Bible translation is installed yet.'),findsOneWidget);
  });
  testWidgets('main navigation switches between app sections',(tester)async{
   await tester.pumpWidget(const MaterialApp(home:AppShell()));await tester.pumpAndSettle();expect(find.text('Welcome'),findsOneWidget);
