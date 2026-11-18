@@ -26,9 +26,23 @@ jobs:
         run: |
           if [ ! -d android ]; then
             flutter create --platforms=android --org com.thewordcompanion --project-name the_word_companion .
-            sed -i 's/android:label="the_word_companion"/android:label="The Word Companion"/' android/app/src/main/AndroidManifest.xml
-            sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 36/' android/app/build.gradle.kts
           fi
+          sed -i 's/android:label="the_word_companion"/android:label="The Word Companion"/' android/app/src/main/AndroidManifest.xml
+          sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 36/' android/app/build.gradle.kts
+      - name: Align Android plugin compile SDK
+        run: |
+          # Some Flutter plugins still declare SDK 34 in their own Android module.
+          # Raise the affected plugin modules as well as the app module to SDK 36.
+          find "$PUB_CACHE/hosted/pub.dev" -type f \\( -path '*/file_picker-*/android/build.gradle*' -o -path '*/flutter_plugin_android_lifecycle-*/android/build.gradle*' \\) -print0 |
+          while IFS= read -r -d '' file; do
+            sed -i -E \
+              -e 's/^([[:space:]]*compileSdkVersion[[:space:]]+).*/\136/' \
+              -e 's/^([[:space:]]*compileSdk[[:space:]]*=[[:space:]]*).*/\136/' \
+              -e 's/^([[:space:]]*compileSdkVersion[[:space:]]*=[[:space:]]*).*/\136/' \
+              "$file"
+            echo "Patched $file"
+            grep -n 'compileSdk' "$file" || true
+          done
       - name: Install dependencies
         run: flutter pub get
       - name: Analyze Dart source
