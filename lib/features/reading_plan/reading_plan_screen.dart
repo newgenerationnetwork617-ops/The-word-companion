@@ -24,7 +24,9 @@ class _ReadingPlanScreenState extends State<ReadingPlanScreen> {
   Future<void> _setCompleted(ReadingPlanDay day, bool completed) async {
     await _repository.setDayCompleted(plan: _plan, day: day, completed: completed);
     if (!mounted) return;
-    setState(() => _completedFuture = _repository.getCompletedDays(_plan));
+    setState(() {
+      _completedFuture = _repository.getCompletedDays(_plan);
+    });
   }
 
   @override
