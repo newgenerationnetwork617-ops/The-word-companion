@@ -21,7 +21,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final selection = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: const ['json'], withData: true);
     if (selection == null || selection.files.isEmpty) return null;
     final file = selection.files.single;
-    return file.bytes != null ? utf8.decode(file.bytes!) : File(file.path!).readAsString();
+    final bytes = file.bytes;
+    if (bytes != null) return utf8.decode(bytes);
+    final path = file.path;
+    if (path == null) throw StateError('The selected file could not be read.');
+    return await File(path).readAsString();
   }
 
   Future<void> _installBiblePackage() async {

@@ -11,7 +11,7 @@ class ValidatedHymnPackage {
   });
   final String id, name, languageCode, sourceName, sourceUrl, licenceName, licenceUrl, attribution, checksum;
   final int packageVersion;
-  final List<Map<String, Object>> hymns;
+  final List<Map<String, Object?>> hymns;
 }
 
 class HymnPackageImporter {
