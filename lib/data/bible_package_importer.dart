@@ -74,7 +74,8 @@ class BiblePackageImporter {
     final name = requiredText(manifest, 'display_name');
     final abbreviation = requiredText(manifest, 'abbreviation');
     final language = requiredText(manifest, 'language_code');
-    if (!language.toLowerCase().startsWith('en')) {
+    final normalizedLanguage = language.toLowerCase();
+    if (normalizedLanguage != 'en' && !normalizedLanguage.startsWith('en-')) {
       throw const FormatException('Only English Bible translation packages are supported.');
     }
     final sourceName = requiredText(manifest, 'source_name');
@@ -196,6 +197,10 @@ class BiblePackageImporter {
       await txn.insert('app_metadata', {
         'key': 'package_attribution_${package.id}',
         'value': package.attribution,
+      });
+      await txn.insert('app_metadata', {
+        'key': 'package_source_url_${package.id}',
+        'value': package.sourceUrl,
       });
     });
   }

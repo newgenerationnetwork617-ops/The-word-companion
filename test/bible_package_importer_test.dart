@@ -65,6 +65,12 @@ void main() {
     expect(() => BiblePackageImporter.validate(jsonEncode(data)), throwsFormatException);
   });
 
+  test('rejects language codes that only begin with the letters en', () {
+    final data = jsonDecode(packageJson()) as Map<String, dynamic>;
+    (data['manifest'] as Map<String, dynamic>)['language_code'] = 'english';
+    expect(() => BiblePackageImporter.validate(jsonEncode(data)), throwsFormatException);
+  });
+
   test('rejects unsupported package schema versions', () {
     final data = jsonDecode(packageJson()) as Map<String, dynamic>;
     (data['manifest'] as Map<String, dynamic>)['schema_version'] = 2;

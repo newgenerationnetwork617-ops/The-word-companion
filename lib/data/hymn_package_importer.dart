@@ -87,7 +87,7 @@ class HymnPackageImporter {
     final package = validate(source);
     final db = await _localDatabase.database;
     await db.transaction((txn) async {
-      final existing = await txn.query('hymn_collections', columns: ['id'], where: 'id = ?', whereArgs: [package.id], limit: 1);
+      final existing = await txn.query('installed_content_packages', columns: ['package_id'], where: 'package_id = ?', whereArgs: [package.id], limit: 1);
       if (existing.isNotEmpty) throw StateError('This hymn collection is already installed.');
       await txn.insert('hymn_collections', {
         'id': package.id, 'name': package.name, 'language_code': package.languageCode,
