@@ -27,7 +27,7 @@ void main(){
   await tester.pumpWidget(MaterialApp(home:BibleScreen(repository:_EmptyBibleRepository())));
   await tester.pumpAndSettle();
   expect(find.text('Bible reader'),findsOneWidget);
-  expect(find.textContaining('No Bible translation is installed yet.'),findsOneWidget);
+  expect(find.textContaining('No English Bible translation is installed yet.'),findsOneWidget);
  });
  testWidgets('a selected verse opens the Study Scripture workspace',(tester)async{
   await tester.pumpWidget(MaterialApp(home:AppShell(bibleRepository:_SampleBibleRepository())));
