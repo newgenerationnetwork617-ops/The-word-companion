@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../bible/bible_screen.dart';
+import '../../data/study_content.dart';
 
 class StudyScreen extends StatelessWidget {
   const StudyScreen({super.key, this.selection});
@@ -54,40 +55,86 @@ class StudyScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 18),
-              _StudySection(
-                icon: Icons.lightbulb_outline,
-                title: 'Understand',
-                description:
-                    'A clear explanation of the verse and its immediate meaning.',
-              ),
-              _StudySection(
-                icon: Icons.menu_book_outlined,
-                title: 'Explore',
-                description:
-                    'Historical, literary and biblical context for deeper study.',
-              ),
-              _StudySection(
-                icon: Icons.directions_outlined,
-                title: 'Apply',
-                description:
-                    'Practical ways to put the teaching into everyday life.',
-              ),
-              _StudySection(
-                icon: Icons.link,
-                title: 'Connect',
-                description:
-                    'Related Scripture passages with an explanation of each connection.',
-              ),
-              _StudySection(
-                icon: Icons.self_improvement_outlined,
-                title: 'Reflect',
-                description:
-                    'Questions to help you think carefully about the passage.',
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'These study sections are the planned structure. Reviewed offline commentary and cross-reference content will be added before the study feature is considered complete.',
-              ),
+              if (studyGuides[selected.reference] case final guide?) ...[
+                _StudySection(
+                  icon: Icons.lightbulb_outline,
+                  title: 'Understand',
+                  description: guide.understand,
+                ),
+                _StudySection(
+                  icon: Icons.menu_book_outlined,
+                  title: 'Explore',
+                  description: guide.context,
+                ),
+                _StudySection(
+                  icon: Icons.directions_outlined,
+                  title: 'Apply',
+                  description: guide.apply,
+                ),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.link),
+                            const SizedBox(width: 10),
+                            Text('Connect', style: Theme.of(context).textTheme.titleMedium),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        for (final connection in guide.connections)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(connection.reference, style: const TextStyle(fontWeight: FontWeight.w700)),
+                                const SizedBox(height: 3),
+                                Text(connection.reason),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.self_improvement_outlined),
+                            const SizedBox(width: 10),
+                            Text('Reflect', style: Theme.of(context).textTheme.titleMedium),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        for (var i = 0; i < guide.reflection.length; i++)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Text('${i + 1}. ${guide.reflection[i]}'),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text('Study notes are original editorial aids. Read the surrounding Bible passage and compare translations as you study.'),
+              ] else
+                const Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text(
+                      'A full study guide for this verse has not been added yet. The study library is being expanded with contextual explanations, practical application and explained cross-references. For now, read the surrounding chapter and compare the available translations.',
+                    ),
+                  ),
+                ),
             ],
           ],
         ),
