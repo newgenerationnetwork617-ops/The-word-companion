@@ -107,6 +107,22 @@ class BibleRepository {
     }).toList(growable: false);
   }
 
+  Future<Map<BibleVersion, List<BibleVerse>>> getChapterAcrossVersions({
+    required int bookId,
+    required int chapter,
+  }) async {
+    final versions = await getInstalledVersions();
+    final entries = await Future.wait(versions.map((version) async {
+      final verses = await getChapter(
+        versionId: version.id,
+        bookId: bookId,
+        chapter: chapter,
+      );
+      return MapEntry(version, verses);
+    }));
+    return Map.fromEntries(entries.where((entry) => entry.value.isNotEmpty));
+  }
+
   Future<bool> toggleBookmark({
     required String versionId,
     required int bookId,
