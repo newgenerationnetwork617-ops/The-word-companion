@@ -1,6 +1,7 @@
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'bible_catalog.dart';
 
 class LocalDatabase {
   LocalDatabase._();
@@ -39,6 +40,17 @@ class LocalDatabase {
       FOREIGN KEY(book_id) REFERENCES books(id),
       UNIQUE(version_id, book_id, chapter_number, verse_number)
     )''');
+    final bookBatch = db.batch();
+    for (final book in bibleBooks) {
+      bookBatch.insert('books', {
+        'id': book.id,
+        'testament': book.testament,
+        'name': book.name,
+        'abbreviation': book.abbreviation,
+        'chapter_count': book.chapters,
+      }, conflictAlgorithm: ConflictAlgorithm.ignore);
+    }
+    await bookBatch.commit(noResult: true);
     await db.execute('CREATE INDEX idx_verses_reference ON verses(version_id, book_id, chapter_number, verse_number)');
     await db.execute('''CREATE TABLE cross_references (
       id INTEGER PRIMARY KEY AUTOINCREMENT, source_book_id INTEGER NOT NULL,
