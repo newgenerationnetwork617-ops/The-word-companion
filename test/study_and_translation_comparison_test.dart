@@ -43,6 +43,11 @@ void main() {
       'Romans 8:28',
       'Proverbs 3:5',
       'Philippians 4:6',
+      'Matthew 6:33',
+      'Micah 6:8',
+      'James 1:5',
+      'Ephesians 2:8',
+      'Galatians 5:22',
     ]));
     for (final guide in studyGuides.values) {
       expect(guide.understand, isNotEmpty);
