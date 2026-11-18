@@ -1,36 +1,20 @@
 import 'package:sqflite/sqflite.dart';
-
 import 'local_database.dart';
 
 class ReadingPlanDay {
-  const ReadingPlanDay({
-    required this.day,
-    required this.reference,
-    required this.bookId,
-    required this.chapter,
-    required this.focus,
-  });
-
+  const ReadingPlanDay({required this.day, required this.reference, required this.bookId, required this.chapter, required this.focus});
   final int day;
   final String reference;
   final int bookId;
   final int chapter;
   final String focus;
 }
-
 class ReadingPlan {
-  const ReadingPlan({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.days,
-  });
-
+  const ReadingPlan({required this.id, required this.title, required this.description, required this.days});
   final String id;
   final String title;
   final String description;
   final List<ReadingPlanDay> days;
-
   static const sevenDaysInJohn = ReadingPlan(
     id: 'seven-days-in-john',
     title: 'Seven Days in the Gospel of John',
@@ -46,29 +30,18 @@ class ReadingPlan {
     ],
   );
 }
-
 class ReadingPlanRepository {
-  ReadingPlanRepository({LocalDatabase? database})
-      : _database = database ?? LocalDatabase.instance;
-
+  ReadingPlanRepository({LocalDatabase? database}) : _database = database ?? LocalDatabase.instance;
   final LocalDatabase _database;
 
   Future<Set<int>> getCompletedDays(ReadingPlan plan) async {
+    if (plan.days.isEmpty) return {};
     final db = await _database.database;
-    final rows = await db.query(
-      'reading_progress',
-      columns: ['chapter_number'],
-      where: 'plan_id = ? AND book_id = ?',
-      whereArgs: [plan.id, 43],
-    );
+    final rows = await db.query('reading_progress', columns: ['chapter_number'], where: 'plan_id = ? AND book_id = ?', whereArgs: [plan.id, plan.days.first.bookId]);
     return rows.map((row) => row['chapter_number']! as int).toSet();
   }
 
-  Future<void> setDayCompleted({
-    required ReadingPlan plan,
-    required ReadingPlanDay day,
-    required bool completed,
-  }) async {
+  Future<void> setDayCompleted({required ReadingPlan plan, required ReadingPlanDay day, required bool completed}) async {
     final db = await _database.database;
     const where = 'plan_id = ? AND book_id = ? AND chapter_number = ?';
     final args = [plan.id, day.bookId, day.chapter];
@@ -76,15 +49,11 @@ class ReadingPlanRepository {
       await db.delete('reading_progress', where: where, whereArgs: args);
       return;
     }
-    await db.insert(
-      'reading_progress',
-      {
-        'plan_id': plan.id,
-        'book_id': day.bookId,
-        'chapter_number': day.chapter,
-        'completed_at': DateTime.now().toUtc().toIso8601String(),
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await db.insert('reading_progress', {
+      'plan_id': plan.id,
+      'book_id': day.bookId,
+      'chapter_number': day.chapter,
+      'completed_at': DateTime.now().toUtc().toIso8601String(),
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 }
