@@ -4,8 +4,8 @@
 
 An offline-first Android Bible reading and study application.
 
-## Stage 1 status
-This commit establishes the Flutter application shell, five-section navigation, visual theme, local SQLite schema, and content-package specification. The Bible, Study, Hymns, and Settings screens are foundations; actual content and full features arrive in later stages.
+## Stage 1 foundation
+The Flutter application shell, five-section navigation, visual theme, local SQLite schema, content-package specification, and Android platform project are included. GitHub Actions checks Dart analysis and widget tests, builds a debug APK, and stores it as a workflow artifact.
 
 ## Principles
 - Android-first and offline-first.

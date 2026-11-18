@@ -22,6 +22,7 @@ class LocalDatabase {
   }
 
   Future<void> _createSchema(Database db, int version) async {
+    await db.execute('CREATE TABLE app_metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL)');
     await db.execute('''CREATE TABLE bible_versions (
       id TEXT PRIMARY KEY, name TEXT NOT NULL, abbreviation TEXT NOT NULL UNIQUE,
       language_code TEXT NOT NULL, source_name TEXT NOT NULL, licence_name TEXT NOT NULL,
@@ -86,9 +87,23 @@ class LocalDatabase {
       display_name TEXT NOT NULL, source_name TEXT NOT NULL, licence_name TEXT NOT NULL,
       installed_at TEXT NOT NULL, checksum_sha256 TEXT NOT NULL
     )''');
-    await db.execute('''CREATE VIRTUAL TABLE verse_search USING fts5(
-      version_id UNINDEXED, book_id UNINDEXED, chapter_number UNINDEXED,
-      verse_number UNINDEXED, text, tokenize='unicode61'
-    )''');
+
+    try {
+      await db.execute('''CREATE VIRTUAL TABLE verse_search USING fts5(
+        version_id UNINDEXED, book_id UNINDEXED, chapter_number UNINDEXED,
+        verse_number UNINDEXED, text, tokenize='unicode61'
+      )''');
+      await db.insert('app_metadata', {'key': 'verse_search_mode', 'value': 'fts5'});
+    } on DatabaseException {
+      // Some Android SQLite builds omit FTS5. Keep database setup working and
+      // provide a basic indexed search store for the offline reader.
+      await db.execute('''CREATE TABLE verse_search (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, version_id TEXT NOT NULL,
+        book_id INTEGER NOT NULL, chapter_number INTEGER NOT NULL,
+        verse_number INTEGER NOT NULL, text TEXT NOT NULL
+      )''');
+      await db.execute('CREATE INDEX idx_verse_search_reference ON verse_search(version_id, book_id, chapter_number, verse_number)');
+      await db.insert('app_metadata', {'key': 'verse_search_mode', 'value': 'basic'});
+    }
   }
 }

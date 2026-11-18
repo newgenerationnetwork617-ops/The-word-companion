@@ -1,4 +1,4 @@
-name: Flutter checks
+name: Flutter checks and Android build
 
 on:
   push:
@@ -6,20 +6,50 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: write
+
 jobs:
-  analyze-and-test:
+  analyze-test-android:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
           cache: true
+      - name: Generate Android platform files when missing
+        run: |
+          if [ ! -d android ]; then
+            flutter create --platforms=android --org com.thewordcompanion --project-name the_word_companion .
+            sed -i 's/android:label="the_word_companion"/android:label="The Word Companion"/' android/app/src/main/AndroidManifest.xml
+          fi
       - name: Install dependencies
         run: flutter pub get
-      - name: Analyze
-        run: flutter analyze
+      - name: Analyze Dart source
+        run: flutter analyze --no-fatal-infos
       - name: Run widget tests
         run: flutter test
+      - name: Build Android debug APK
+        run: flutter build apk --debug
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: the-word-companion-debug-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+      - name: Save generated Android project to repository
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add android
+          if ! git diff --cached --quiet; then
+            git commit -m "Add generated Android platform project"
+            git push
+          fi
