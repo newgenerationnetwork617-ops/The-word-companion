@@ -92,8 +92,7 @@ const Map<String, StudyGuide> studyGuides = {
       'What concern can you honestly bring to God today?',
       'What is one thing you can thank God for even while that concern remains?',
     ],
-  ),,
-
+  ),
   'Matthew 6:33': StudyGuide(
     understand: 'Jesus calls his followers to make God’s kingdom and righteousness their first priority. The promise about daily needs belongs to a teaching that invites trust in the Father rather than anxious obsession with possessions.',
     context: 'Matthew 6:25–34 addresses worry about food, drink and clothing. Jesus points to the Father’s care and contrasts a life ruled by anxiety with a life that seeks God’s reign.',
