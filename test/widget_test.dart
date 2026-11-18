@@ -86,7 +86,7 @@ void main() {
     final repository = _MemoryReadingPlanRepository();
     await tester.pumpWidget(MaterialApp(home: ReadingPlanScreen(repository: repository)));
     await tester.pumpAndSettle();
-    expect(find.text('Seven Days in the Gospel of John'), findsOneWidget);
+    expect(find.text('Seven Days in the Gospel of John'), findsNWidgets(2));
     expect(find.text('0 of 7 days'), findsOneWidget);
     await tester.tap(find.textContaining('Day 1'));
     await tester.pumpAndSettle();
