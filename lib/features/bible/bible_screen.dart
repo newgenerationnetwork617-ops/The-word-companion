@@ -30,7 +30,7 @@ class _BibleScreenState extends State<BibleScreen> {
   body:SafeArea(child:FutureBuilder<List<BibleVersion>>(
    future:_versionsFuture,
    builder:(context,snapshot){
-    if(snapshot.hasError)return const Center(child:Text('The Bible library could not be opened.'));
+    if(snapshot.hasError)return Center(child:Column(mainAxisSize:MainAxisSize.min,children:[Text('Bible reader',style:Theme.of(context).textTheme.headlineSmall),const SizedBox(height:8),const Text('The Bible library could not be opened. Please restart the app.') ]));
     if(!snapshot.hasData)return const Center(child:CircularProgressIndicator());
     final versions=snapshot.data!;
     if(_versionId!=null&&!versions.any((v)=>v.id==_versionId))_versionId=null;
