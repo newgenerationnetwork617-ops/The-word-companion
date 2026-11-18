@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../navigation/app_shell.dart';
 import '../bible/bible_screen.dart';
 
 class StudyScreen extends StatelessWidget {
