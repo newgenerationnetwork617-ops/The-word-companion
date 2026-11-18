@@ -11,13 +11,14 @@ class ReadingPlanScreen extends StatefulWidget {
 
 class _ReadingPlanScreenState extends State<ReadingPlanScreen> {
   late final ReadingPlanRepository _repository;
-  final ReadingPlan _plan = ReadingPlan.sevenDaysInJohn;
+  late ReadingPlan _plan;
   late Future<Set<int>> _completedFuture;
 
   @override
   void initState() {
     super.initState();
     _repository = widget.repository ?? ReadingPlanRepository();
+    _plan = ReadingPlan.sevenDaysInJohn;
     _completedFuture = _repository.getCompletedDays(_plan);
   }
 
@@ -44,6 +45,26 @@ class _ReadingPlanScreenState extends State<ReadingPlanScreen> {
           return ListView(
             padding: const EdgeInsets.all(20),
             children: [
+              DropdownButtonFormField<String>(
+                value: _plan.id,
+                decoration: const InputDecoration(
+                  labelText: 'Choose a reading plan',
+                  border: OutlineInputBorder(),
+                ),
+                items: ReadingPlan.available.map((plan) => DropdownMenuItem(
+                  value: plan.id,
+                  child: Text(plan.title),
+                )).toList(),
+                onChanged: (id) {
+                  final selected = ReadingPlan.available.where((plan) => plan.id == id).firstOrNull;
+                  if (selected == null) return;
+                  setState(() {
+                    _plan = selected;
+                    _completedFuture = _repository.getCompletedDays(_plan);
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
               Text(_plan.title, style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
               const SizedBox(height: 8),
               Text(_plan.description, style: theme.textTheme.bodyLarge),
