@@ -51,7 +51,7 @@ class _ReadingPlanScreenState extends State<ReadingPlanScreen> {
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Text('Your progress', style: theme.textTheme.titleMedium),
-                    Text('$count of \${_plan.days.length} days'),
+                    Text('$count of ${_plan.days.length} days'),
                   ]),
                   const SizedBox(height: 12),
                   LinearProgressIndicator(value: count / _plan.days.length, minHeight: 8),
@@ -66,7 +66,7 @@ class _ReadingPlanScreenState extends State<ReadingPlanScreen> {
                 value: completed.contains(day.chapter),
                 onChanged: (value) => _setCompleted(day, value ?? false),
                 controlAffinity: ListTileControlAffinity.leading,
-                title: Text('Day \${day.day} · \${day.reference}'),
+                title: Text('Day ${day.day} · ${day.reference}'),
                 subtitle: Text(day.focus),
               ))),
               const SizedBox(height: 12),

@@ -97,7 +97,7 @@ class _HymnsScreenState extends State<HymnsScreen> {
                 return Column(children: hymns.map((hymn) => Card(child: ListTile(
                   leading: const Icon(Icons.music_note_rounded),
                   title: Text(hymn.title),
-                  subtitle: Text([if (hymn.hymnNumber != null) 'No. \${hymn.hymnNumber}', hymn.collectionName].join(' • ')),
+                  subtitle: Text([if (hymn.hymnNumber != null) 'No. ${hymn.hymnNumber}', hymn.collectionName].join(' • ')),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => _openHymn(hymn),
                 ))).toList());
@@ -127,7 +127,7 @@ class _HymnsScreenState extends State<HymnsScreen> {
                 return Column(children: collections.map((collection) => Card(child: ListTile(
                   leading: const Icon(Icons.library_music_rounded),
                   title: Text(collection.name),
-                  subtitle: Text('\${collection.hymnCount} hymns • \${collection.licenceName}'),
+                  subtitle: Text('${collection.hymnCount} hymns • ${collection.licenceName}'),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => _openCollection(collection),
                 ))).toList());
@@ -150,12 +150,12 @@ class HymnDetailScreen extends StatelessWidget {
     body: SafeArea(child: ListView(padding: const EdgeInsets.all(24), children: [
       Text(hymn.title, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
       const SizedBox(height: 8),
-      Text([if (hymn.hymnNumber != null) 'Hymn \${hymn.hymnNumber}', hymn.collectionName].join(' · '), style: Theme.of(context).textTheme.bodyMedium),
+      Text([if (hymn.hymnNumber != null) 'Hymn ${hymn.hymnNumber}', hymn.collectionName].join(' · '), style: Theme.of(context).textTheme.bodyMedium),
       const Divider(height: 28),
       SelectableText(hymn.lyrics, style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.8)),
       const SizedBox(height: 28),
-      Text('Source: \${hymn.sourceName}', style: Theme.of(context).textTheme.bodySmall),
-      Text('Licence: \${hymn.licenceName}', style: Theme.of(context).textTheme.bodySmall),
+      Text('Source: ${hymn.sourceName}', style: Theme.of(context).textTheme.bodySmall),
+      Text('Licence: ${hymn.licenceName}', style: Theme.of(context).textTheme.bodySmall),
     ])),
   );
 }

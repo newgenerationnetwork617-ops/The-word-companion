@@ -66,7 +66,7 @@ class HymnPackageImporter {
       }
       if (number != null && number is! String && number is! int) throw const FormatException('hymn_number must be text or a number.');
       if (firstLine != null && firstLine is! String) throw const FormatException('first_line must be text.');
-      final key = (number?.toString().trim().isNotEmpty ?? false) ? 'number:\${number.toString().trim()}' : 'title:\${title.trim().toLowerCase()}';
+      final key = (number?.toString().trim().isNotEmpty ?? false) ? 'number:${number.toString().trim()}' : 'title:${title.trim().toLowerCase()}';
       if (!seen.add(key)) throw FormatException('Duplicate hymn entry: $key.');
       hymns.add({
         'title': title.trim(),
@@ -97,7 +97,7 @@ class HymnPackageImporter {
       for (var i = 0; i < package.hymns.length; i++) {
         batch.insert('hymns', {
           ...package.hymns[i],
-          'id': '\${package.id}-\${i + 1}',
+          'id': '${package.id}-${i + 1}',
           'collection_id': package.id,
           'language_code': package.languageCode,
           'source_name': package.sourceName,
@@ -112,7 +112,9 @@ class HymnPackageImporter {
         'installed_at': DateTime.now().toUtc().toIso8601String(),
         'checksum_sha256': package.checksum,
       });
-      await txn.insert('app_metadata', {'key': 'package_attribution_\${package.id}', 'value': package.attribution});
+      await txn.insert('app_metadata', {'key': 'package_attribution_${package.id}', 'value': package.attribution});
+      await txn.insert('app_metadata', {'key': 'package_source_url_${package.id}', 'value': package.sourceUrl});
+      await txn.insert('app_metadata', {'key': 'package_licence_url_${package.id}', 'value': package.licenceUrl});
     });
   }
 }
