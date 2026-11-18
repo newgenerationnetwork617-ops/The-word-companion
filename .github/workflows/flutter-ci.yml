@@ -38,7 +38,8 @@ jobs:
           while IFS= read -r -d '' file; do
             sed -i -E \
               -e 's/^([[:space:]]*compileSdkVersion[[:space:]]+).*/\1 36/' \
-              -e 's/^([[:space:]]*compileSdk[[:space:]]*=[[:space:]]*).*/\1 36/' \
+              -e 's/^([[:space:]]*compileSdk[[:space:]]*=[[:space:]]*).*/\1 36/' \\
+              -e 's/^([[:space:]]*compileSdk[[:space:]]+).*/\1 36/' \\
               -e 's/^([[:space:]]*compileSdkVersion[[:space:]]*=[[:space:]]*).*/\1 36/' \
               "$file"
             echo "Patched $file"
