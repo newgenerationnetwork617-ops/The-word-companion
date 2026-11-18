@@ -56,8 +56,11 @@ class _ReadingPlanScreenState extends State<ReadingPlanScreen> {
                   child: Text(plan.title),
                 )).toList(),
                 onChanged: (id) {
-                  final selected = ReadingPlan.available.firstWhere((plan) => plan.id == id, orElse: () => _plan);
-                  if (selected == null) return;
+                  if (id == null) return;
+                  final selected = ReadingPlan.available.firstWhere(
+                    (plan) => plan.id == id,
+                    orElse: () => _plan,
+                  );
                   setState(() {
                     _plan = selected;
                     _completedFuture = _repository.getCompletedDays(_plan);
