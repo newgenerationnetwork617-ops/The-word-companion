@@ -21,7 +21,19 @@ void main() {
     };
   }
 
-  test('bundled hymn collections are valid offline packages', () async {\n    for (final asset in [\n      'assets/hymns/twc-original-praise.json',\n      'assets/hymns/twc-scripture-songs.json',\n    ]) {\n      final source = await rootBundle.loadString(asset);\n      final package = HymnPackageImporter.validate(source);\n      expect(package.languageCode, 'en');\n      expect(package.hymns, hasLength(4));\n    }\n  });\n\n  test('valid English hymn package is accepted', () {
+  test('bundled hymn collections are valid offline packages', () async {
+    for (final asset in [
+      'assets/hymns/twc-original-praise.json',
+      'assets/hymns/twc-scripture-songs.json',
+    ]) {
+      final source = await rootBundle.loadString(asset);
+      final package = HymnPackageImporter.validate(source);
+      expect(package.languageCode, 'en');
+      expect(package.hymns, hasLength(4));
+    }
+  });
+
+  test('valid English hymn package is accepted', () {
     final result = HymnPackageImporter.validate(jsonEncode(makePackage()));
     expect(result.name, 'Sample English Hymns');
     expect(result.hymns, hasLength(1));
