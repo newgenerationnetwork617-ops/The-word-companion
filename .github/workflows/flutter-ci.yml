@@ -25,7 +25,6 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.38.9'
           channel: stable
           cache: true
       - name: Generate Android platform files when missing
@@ -44,6 +43,7 @@ jobs:
         run: flutter pub get
       - name: Align Android plugin compile SDK
         run: |
+          # Kotlin DSL requires an equals sign; Groovy plugin files use Groovy syntax.
           find "$PUB_CACHE/hosted/pub.dev" -type f \( -path '*/file_picker-*/android/build.gradle*' -o -path '*/flutter_plugin_android_lifecycle-*/android/build.gradle*' \) -print0 |
           while IFS= read -r -d '' file; do
             if [[ "$file" == *.gradle.kts ]]; then
@@ -52,6 +52,7 @@ jobs:
               sed -i -E -e 's/^([[:space:]]*compileSdkVersion[[:space:]]+).*/\1 36/' -e 's/^([[:space:]]*compileSdk[[:space:]]*=[[:space:]]*).*/\1 36/' -e 's/^([[:space:]]*compileSdk[[:space:]]+).*/\1 36/' -e 's/^([[:space:]]*compileSdkVersion[[:space:]]*=[[:space:]]*).*/\1 36/' "$file"
             fi
             echo "Patched $file"
+            grep -n 'compileSdk' "$file" || true
           done
       - name: Analyze Dart source
         run: flutter analyze --no-fatal-infos
