@@ -30,7 +30,9 @@ jobs:
           sed -i 's/android:label="the_word_companion"/android:label="The Word Companion"/' android/app/src/main/AndroidManifest.xml
           sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 36/' android/app/build.gradle.kts
       - name: Prepare verified offline Bible content
-        run: python3 tool/build_bundled_bible.py
+        run: |
+          python3 tool/build_bundled_bible.py
+          python3 tool/build_bundled_translations.py
       - name: Install dependencies
         run: flutter pub get
       - name: Align Android plugin compile SDK
