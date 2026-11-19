@@ -20,7 +20,7 @@ class BundledBibleInstaller {
   /// Asset paths are explicit so a missing asset is caught during development
   /// and cannot silently trigger an online download.
   static const packageAssets = <String>[
-    // Add verified, complete English translation package assets here.
+    'assets/bible/webu.json',
   ];
 
   Future<void> installAvailablePackages() async {
