@@ -33,6 +33,7 @@ jobs:
         run: |
           python3 tool/build_bundled_bible.py
           python3 tool/build_bundled_translations.py
+          python3 tool/build_bundled_hymns.py
       - name: Install dependencies
         run: flutter pub get
       - name: Align Android plugin compile SDK
