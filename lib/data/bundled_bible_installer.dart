@@ -20,6 +20,10 @@ class BundledBibleInstaller {
   /// Asset paths are explicit so a missing asset is caught during development
   /// and cannot silently trigger an online download.
   static const packageAssets = <String>[
+    'assets/bible/kjv.json',
+    'assets/bible/asv.json',
+    'assets/bible/web.json',
+    'assets/bible/geneva1599.json',
     'assets/bible/webu.json',
   ];
 
