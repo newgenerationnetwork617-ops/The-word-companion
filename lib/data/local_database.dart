@@ -101,21 +101,21 @@ class LocalDatabase {
     )''');
 
     try {
-      await db.execute('''CREATE VIRTUAL TABLE verse_search USING fts5(
+      await db.execute('''CREATE VIRTUAL TABLE IF NOT EXISTS verse_search USING fts5(
         version_id UNINDEXED, book_id UNINDEXED, chapter_number UNINDEXED,
         verse_number UNINDEXED, text, tokenize='unicode61'
       )''');
-      await db.insert('app_metadata', {'key': 'verse_search_mode', 'value': 'fts5'});
+      await db.insert('app_metadata', {'key': 'verse_search_mode', 'value': 'fts5'}, conflictAlgorithm: ConflictAlgorithm.replace);
     } on DatabaseException {
       // Some Android SQLite builds omit FTS5. Keep database setup working and
       // provide a basic indexed search store for the offline reader.
-      await db.execute('''CREATE TABLE verse_search (
+      await db.execute('''CREATE TABLE IF NOT EXISTS verse_search (
         id INTEGER PRIMARY KEY AUTOINCREMENT, version_id TEXT NOT NULL,
         book_id INTEGER NOT NULL, chapter_number INTEGER NOT NULL,
         verse_number INTEGER NOT NULL, text TEXT NOT NULL
       )''');
       await db.execute('CREATE INDEX idx_verse_search_reference ON verse_search(version_id, book_id, chapter_number, verse_number)');
-      await db.insert('app_metadata', {'key': 'verse_search_mode', 'value': 'basic'});
+      await db.insert('app_metadata', {'key': 'verse_search_mode', 'value': 'basic'}, conflictAlgorithm: ConflictAlgorithm.replace);
     }
   }
 }
