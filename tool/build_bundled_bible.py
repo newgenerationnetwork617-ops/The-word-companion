@@ -39,6 +39,7 @@ def main():
     expected_chapters = {name: count for name, count in BOOKS}
     seen = set()
     chapter_sets = {name: set() for name, _ in BOOKS}
+    verse_numbers = {}
     verses = []
     for item in records:
         if item.get("translation") != "WEBU":
@@ -55,6 +56,7 @@ def main():
             raise SystemExit(f"Duplicate Scripture reference: {key}")
         seen.add(key)
         chapter_sets[name].add(chapter)
+        verse_numbers.setdefault((book_id, chapter), set()).add(number)
         verses.append({
             "book_id": book_id,
             "chapter_number": chapter,
@@ -65,6 +67,10 @@ def main():
     for name, chapter_count in BOOKS:
         if chapter_sets[name] != set(range(1, chapter_count + 1)):
             raise SystemExit(f"Incomplete chapter coverage for {name}")
+
+    for (book_id, chapter), numbers in verse_numbers.items():
+        if numbers != set(range(1, max(numbers) + 1)):
+            raise SystemExit(f"Non-contiguous verse numbering in book {book_id}, chapter {chapter}")
 
     verses.sort(key=lambda v: (v["book_id"], v["chapter_number"], v["verse_number"]))
     content = {"verses": verses}
