@@ -31,6 +31,20 @@ class _BibleScreenState extends State<BibleScreen> {
     super.initState();
     _repository = widget.repository ?? BibleRepository();
     _versionsFuture = _repository.getInstalledVersions();
+    _selectDefaultVersion();
+  }
+
+  Future<void> _selectDefaultVersion() async {
+    try {
+      final versions = await _versionsFuture;
+      if (!mounted || _versionId != null || versions.isEmpty) return;
+      final preferred = versions.where((version) => version.id == 'kjv');
+      setState(() {
+        _versionId = preferred.isNotEmpty ? preferred.first.id : versions.first.id;
+      });
+    } catch (_) {
+      // The FutureBuilder below presents the reader's loading error state.
+    }
   }
 
   Future<void> _compareTranslations() async {
