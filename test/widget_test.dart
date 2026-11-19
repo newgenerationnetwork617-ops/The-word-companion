@@ -58,7 +58,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byType(DropdownButtonFormField<String>));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Sample English (SEN)'));
+    await tester.tap(find.byWidgetPredicate((widget) => widget is DropdownMenuItem<String> && widget.value == 'sample-en'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('In the beginning God created the heavens and the earth.'));
     await tester.pumpAndSettle();
