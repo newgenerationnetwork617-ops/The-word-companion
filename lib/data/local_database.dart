@@ -100,24 +100,32 @@ class LocalDatabase {
       installed_at TEXT NOT NULL, checksum_sha256 TEXT NOT NULL
     )''');
 
-    // Recover safely if a previous first launch left the search table behind.
-    final searchObjects = await db.rawQuery(
+    // Create the search table once. Keep the FTS5 exception handler limited
+    // to the virtual-table statement: catching later metadata/index errors here
+    // could incorrectly try to add a normal index to an FTS virtual table.
+    var searchObjects = await db.rawQuery(
       "SELECT sql FROM sqlite_master WHERE name = 'verse_search' AND type = 'table' LIMIT 1",
     );
+
     if (searchObjects.isEmpty) {
+      var ftsCreated = false;
       try {
         await db.execute('''CREATE VIRTUAL TABLE verse_search USING fts5(
           version_id UNINDEXED, book_id UNINDEXED, chapter_number UNINDEXED,
           verse_number UNINDEXED, text, tokenize='unicode61'
         )''');
-        await db.insert(
-          'app_metadata',
-          {'key': 'verse_search_mode', 'value': 'fts5'},
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        );
+        ftsCreated = true;
       } on DatabaseException {
-        // FTS5 is optional in some Android SQLite builds.
-        await db.execute('''CREATE TABLE IF NOT EXISTS verse_search (
+        // FTS5 may be unavailable on a device's SQLite build.
+      }
+
+      // Re-check after the attempted creation so a partially completed
+      // operation can never lead to CREATE INDEX being run on a virtual table.
+      searchObjects = await db.rawQuery(
+        "SELECT sql FROM sqlite_master WHERE name = 'verse_search' AND type = 'table' LIMIT 1",
+      );
+      if (searchObjects.isEmpty) {
+        await db.execute('''CREATE TABLE verse_search (
           id INTEGER PRIMARY KEY AUTOINCREMENT, version_id TEXT NOT NULL,
           book_id INTEGER NOT NULL, chapter_number INTEGER NOT NULL,
           verse_number INTEGER NOT NULL, text TEXT NOT NULL
@@ -125,12 +133,17 @@ class LocalDatabase {
         await db.execute(
           'CREATE INDEX IF NOT EXISTS idx_verse_search_reference ON verse_search(version_id, book_id, chapter_number, verse_number)',
         );
-        await db.insert(
-          'app_metadata',
-          {'key': 'verse_search_mode', 'value': 'basic'},
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        );
       }
+      final definition = (searchObjects.isEmpty
+              ? ''
+              : (searchObjects.first['sql'] as String? ?? ''))
+          .toLowerCase();
+      final isFts = ftsCreated || definition.contains('using fts5');
+      await db.insert(
+        'app_metadata',
+        {'key': 'verse_search_mode', 'value': isFts ? 'fts5' : 'basic'},
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
     } else {
       final definition = (searchObjects.first['sql'] as String? ?? '').toLowerCase();
       final isFts = definition.contains('using fts5');
