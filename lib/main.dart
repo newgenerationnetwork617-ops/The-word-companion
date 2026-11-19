@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'app/the_word_companion_app.dart';
 import 'data/bundled_bible_installer.dart';
+import 'data/bundled_hymn_installer.dart';
 import 'data/local_database.dart';
 
 Future<void> main() async {
@@ -31,6 +32,7 @@ class _StartupGateState extends State<StartupGate> {
   Future<void> _initialize() async {
     await LocalDatabase.instance.database;
     await BundledBibleInstaller().installAvailablePackages();
+    await BundledHymnInstaller().installAvailablePackages();
   }
 
   void _retry() {
