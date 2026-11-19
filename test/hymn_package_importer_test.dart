@@ -5,6 +5,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:the_word_companion/data/hymn_package_importer.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   Map<String, dynamic> makePackage({String language = 'en', String type = 'hymn_collection'}) {
     final content = {'hymns': [{'title': 'Sample Hymn', 'lyrics': 'First verse\nSecond verse', 'hymn_number': '1', 'first_line': 'First verse'}]};
     final checksum = sha256.convert(utf8.encode(jsonEncode(content))).toString();
