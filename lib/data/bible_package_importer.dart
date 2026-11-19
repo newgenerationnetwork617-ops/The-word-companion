@@ -171,18 +171,22 @@ class BiblePackageImporter {
         'content_version': package.packageVersion,
       });
 
-      final batch = txn.batch();
-      for (final verse in package.verses) {
-        batch.insert('verses', {
-          ...verse,
-          'version_id': package.id,
-        });
-        batch.insert('verse_search', {
-          ...verse,
-          'version_id': package.id,
-        });
+      // Keep each sqflite platform-channel message small. Sending all
+      // ~31,000 verses (plus search-index rows) in one batch can exceed
+      // Android's Binder transaction limits during first launch.
+      const chunkSize = 250;
+      for (var start = 0; start < package.verses.length; start += chunkSize) {
+        final end = (start + chunkSize < package.verses.length)
+            ? start + chunkSize
+            : package.verses.length;
+        final batch = txn.batch();
+        for (final verse in package.verses.sublist(start, end)) {
+          final row = {...verse, 'version_id': package.id};
+          batch.insert('verses', row);
+          batch.insert('verse_search', row);
+        }
+        await batch.commit(noResult: true);
       }
-      await batch.commit(noResult: true);
 
       await txn.insert('installed_content_packages', {
         'package_id': package.id,
