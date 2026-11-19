@@ -54,6 +54,8 @@ jobs:
             echo "Patched $file"
             grep -n 'compileSdk' "$file" || true
           done
+      - name: Generate Android launcher icons
+        run: dart run flutter_launcher_icons
       - name: Analyze Dart source
         run: flutter analyze --no-fatal-infos
       - name: Run widget tests
